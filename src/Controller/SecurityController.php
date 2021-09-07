@@ -15,7 +15,6 @@ class SecurityController extends AbstractController
      */
     public function loginAction(Request $request, AuthenticationUtils $authenticationUtils): Response
     {
-
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
@@ -28,9 +27,16 @@ class SecurityController extends AbstractController
     /**
      * @Route("/login_check", name="login_check")
      */
-    public function loginCheck()
+    public function loginCheck(AuthenticationUtils $authenticationUtils)
     {
-        // This code is never executed.
+        if ($this->getUser()) {
+            return $this->redirectToRoute('/');
+        }
+
+        return $this->render('security/login.html.twig', [
+            'last_username' => $authenticationUtils->getLastUsername(),
+            'error' => $authenticationUtils->getLastAuthenticationError()
+        ]);
     }
 
     /**
@@ -38,6 +44,5 @@ class SecurityController extends AbstractController
      */
     public function logoutCheck()
     {
-        // This code is never executed.
     }
 }
