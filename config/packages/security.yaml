@@ -18,3 +18,5 @@ security:
             custom_authenticator: App\Security\LoginFormAuthenticator
             logout:
                 path: logout
+    access_control:
+        - { path: '^/user', roles: ROLE_ADMIN }
