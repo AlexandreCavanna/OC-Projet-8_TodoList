@@ -6,11 +6,11 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends AbstractController
 {
@@ -24,7 +24,6 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users/create", name="user_create")
-     * @IsGranted("ROLE_ADMIN", statusCode=403)
      */
     public function createAction(Request $request, UserPasswordHasherInterface $passwordEncoder)
     {
@@ -35,7 +34,7 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $password = $passwordEncoder->hashPassword($user, $user->getPassword());;
+            $password = $passwordEncoder->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
 
             $em->persist($user);
@@ -51,7 +50,6 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users/{id}/edit", name="user_edit")
-     * @IsGranted("ROLE_ADMIN", statusCode=403)
      */
     public function editAction(User $user, Request $request, UserPasswordHasherInterface $passwordEncoder)
     {

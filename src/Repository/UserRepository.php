@@ -18,4 +18,18 @@ class UserRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, User::class);
     }
+
+    /**
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
+     */
+    public function findOneByRole(string $role)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.roles LIKE :role')
+            ->setParameter('role', "%[\"$role\"]%")
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleResult();
+    }
 }
