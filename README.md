@@ -1,6 +1,7 @@
 # Améliorez une application existante de ToDo & Co
 
 ## Installation du projet
+[![SymfonyInsight](https://insight.symfony.com/projects/69d116c4-334b-4ee8-b07f-12154ad7129e/mini.svg)](https://insight.symfony.com/projects/69d116c4-334b-4ee8-b07f-12154ad7129e)
 
 En fonction de votre système d'exploitation plusieurs serveurs peuvent être installés :
 
