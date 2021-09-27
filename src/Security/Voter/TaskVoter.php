@@ -3,15 +3,24 @@
 namespace App\Security\Voter;
 
 use App\Entity\Task;
+use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class TaskVoter extends Voter
 {
+    private Security $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
     protected function supports(string $attribute, $subject): bool
     {
-        return in_array($attribute, ['ROLE_ADMIN', 'DELETE_TASK'])
+        return 'MANAGE_TASK' == $attribute
             && $subject instanceof Task;
     }
 
@@ -26,12 +35,15 @@ class TaskVoter extends Voter
         }
 
         switch ($attribute) {
-            case 'ROLE_ADMIN':
-                return $task->getAuthor() === null;
-            case 'DELETE_TASK':
+            case 'MANAGE_TASK':
+                if (['ROLE_ADMIN'] === $this->security->getUser()->getRoles() && null === $task->getAuthor()) {
+                    return true;
+                }
+
                 return $user === $task->getAuthor();
         }
-
-        return false;
+        // @codeCoverageIgnoreStart
+        throw new LogicException('This code should not be reached!');
+        // @codeCoverageIgnoreEnd
     }
 }
